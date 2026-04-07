@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>DMGB TOUR - 2026 Masters Shamble</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <style>
+  .serif {
+    font-family: Georgia, "Times New Roman", serif;
+  }
+</style>
+
+</head>
+
+<body class="bg-gradient-to-b from-green-900 to-green-800 text-white min-h-screen p-4">
+
+  <div class="max-w-md mx-auto px-2">
+
+    <!-- HEADER -->
+    <div class="text-center mb-6 sticky top-0 bg-green-900 py-4 z-10">
+      <h1 class="serif text-4xl md:text-5xl font-extrabold tracking-wide">
+        DMGB TOUR
+      </h1>
+      <p class="text-lg md:text-xl text-green-200 mt-2">
+        2026 Masters Shamble
+      </p>
+      <p class="text-sm md:text-xl text-green-200">
+        @ Celina Lynx Golf Club
+      </p>
+    </div>
+
+    <!-- TEAMS -->
+    <div id="teams" class="space-y-4"></div>
+
+  </div>
+
+  <script>
+    const SHEET_URL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vRIWwClO_OvxpsTb1r7u5rKd2h5U-GW9ZXa9UMNRQ5OouhyIK90cM014cNGzIpIn6M3_d6rsoVDJoxg/pub?output=csv";
+
+    async function loadData() {
+      const res = await fetch(SHEET_URL);
+      const text = await res.text();
+
+      const rows = text.split("\n").map(r => r.split(","));
+      const headers = rows[0];
+
+      const data = rows.slice(1).map(row => {
+        let obj = {};
+        headers.forEach((h, i) => obj[h.trim()] = row[i]?.trim());
+        return obj;
+      });
+
+      render(data);
+    }
+
+    function render(data) {
+      const container = document.getElementById("teams");
+
+      const showScores = data.some(d => d["Display Scores"] === "TRUE");
+
+      let filtered = data;
+
+      if (showScores) {
+        filtered = data
+          .filter(d => d["Display Scores"] === "TRUE")
+          .sort((a, b) => Number(a.Score) - Number(b.Score));
+      } else {
+        filtered = data.sort((a, b) => {
+          return parseTime(a["Tee Time"]) - parseTime(b["Tee Time"]);
+        });
+
+        function parseTime(timeStr) {
+          const [time, modifier] = timeStr.split(" ");
+          let [hours, minutes] = time.split(":").map(Number);
+
+          if (modifier === "PM" && hours !== 12) hours += 12;
+          if (modifier === "AM" && hours === 12) hours = 0;
+
+          return hours * 60 + minutes;
+        }
+      }
+
+      container.innerHTML = filtered.map((team, index) => `
+        <div class="bg-white text-gray-900 p-5 rounded-2xl shadow-md border border-gray-200 
+          ${showScores && index === 0 ? "border-4 border-yellow-400" : ""}">
+
+          <div class="flex justify-between items-center">
+            <h2 class="serif text-xl md:text-2xl font-bold">
+              ${team["Team Name"]}
+            </h2>
+
+            ${
+              showScores
+                ? `<span class="text-2xl font-extrabold text-green-700">
+                    ${team.Score}
+                   </span>`
+                : `<span class="text-base font-semibold text-gray-600 mt-1 sm:mt-0">
+                    ${team["Tee Time"]}
+                   </span>`
+            }
+          </div>
+
+          <div class="mt-2 text-sm md:text-base text-gray-700 border-t pt-2">
+            ${team["Player 1"]}, ${team["Player 2"]}, ${team["Player 3"]}, ${team["Player 4"]}
+          </div>
+
+          ${
+            showScores && index === 0
+              ? `<div class="mt-2 text-yellow-600 font-semibold text-sm">
+                   🏆 Leader
+                 </div>`
+              : ""
+          }
+
+        </div>
+      `).join("");
+    }
+
+    loadData();
+    console.log(data);
+
+    // Auto-refresh every 30 seconds
+    setInterval(loadData, 30000);
+  </script>
+
+</body>
+</html>
