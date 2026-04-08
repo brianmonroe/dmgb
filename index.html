@@ -12,7 +12,7 @@
   }
 
   .bottom-padding {
-    padding-bottom: 400px; /* Ensure content doesn't overlap the background image */
+    padding-bottom: 100px; /* Ensure content doesn't overlap the background image */
   }
 
    .bg-course {
@@ -20,8 +20,8 @@
     bottom: 0;
     left: 0;
     width: 100%;
-    height: 60vh;
-    background-image: url('img/lynx.webp');
+    height: 100vh;
+    background-image: url('img/webp/lynx-2.webp');
     background-size: cover;
     background-position: center bottom;
     background-repeat: no-repeat;
@@ -33,7 +33,7 @@
     bottom: 0;
     left: 0;
     width: 100%;
-    height: 60vh;
+    height: 100vh;
     background: linear-gradient(
       to bottom,
       rgba(20, 83, 45, 0.95) 0%,     /* deep green bottom */
@@ -53,7 +53,7 @@
 
 </head>
 
-<body class="bg-gradient-to-b from-green-900 to-green-800 text-white min-h-screen bottom-padding">
+<body class="bg-gradient-to-b from-green-900 to-green-900 text-white min-h-screen">
 
   <!-- Background Image -->
   <div class="bg-course"></div>
@@ -61,24 +61,43 @@
   <!-- Green Overlay -->
   <div class="bg-overlay"></div>
 
-  <div class="max-w-md mx-auto">
-
-    <!-- HEADER -->
-    <div class="text-center mb-6 sticky top-0 bg-green-900 py-4 z-10">
+      <!-- HEADER -->
+    <div class="text-center mb-6 sticky top-0 bg-green-800 shadow-lg py-4 z-10">
       <h1 class="serif text-4xl md:text-5xl font-extrabold tracking-wide">
         DMGB TOUR
       </h1>
-      <p class="text-lg md:text-xl text-green-200 mt-2">
+      <p class="text-lg md:text-xl text-white mt-2">
         2026 Masters Shamble
       </p>
-      <p class="text-sm md:text-xl text-green-200">
+      <p class="text-sm md:text-xl text-white">
         @ Celina Lynx Golf Club
       </p>
     </div>
-<div class="max-w-md mx-auto px-4 py-2">
-      <!-- TEAMS -->
-    <div id="teams" class="space-y-4"></div>
-</div>
+
+  <div class="max-w-xl mx-auto">
+
+
+    <div class="max-w-xl mx-auto px-4 py-2">
+          <!-- TEAMS -->
+        <div id="teams" class="space-y-4"></div>
+        <div id="format" class="space-y-4 bottom-padding">
+          <h2 class="serif text-2xl font-bold mt-8 mb-4 text-white underline-offset-8">
+            Format</h2>
+            <p class="text-white text-sm md:text-base">
+              4-person shamble format. Each player tees off, the team selects the best drive, and then all players play their own ball from that spot for the rest of the hole. The team's score is the total of the two best individual scores on each hole.</p>
+          <h2 class="serif text-2xl font-bold mt-8 mb-4 text-white underline-offset-8">
+            Payout</h2>
+            <p class="text-white text-sm md:text-base">
+              1st Place: $1,000</p>
+            <p class="text-white text-sm md:text-base">
+              2nd Place: $500</p>
+            <p class="text-white text-sm md:text-base">
+              3rd Place: $250</p>
+            <p class="text-white text-sm md:text-base">
+              Remaining Pot: $250</p>
+        </div>
+    </div>
+
 
 
   </div>
