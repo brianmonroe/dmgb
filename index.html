@@ -124,70 +124,78 @@
     }
 
     function render(data) {
-      const container = document.getElementById("teams");
+  const container = document.getElementById("teams");
 
-      const showScores = data.some(d => d["Display Scores"] === "TRUE");
+  function parseTime(timeStr) {
+    const [time, modifier] = timeStr.split(" ");
+    let [hours, minutes] = time.split(":").map(Number);
 
-      let filtered = data;
+    if (modifier === "PM" && hours !== 12) hours += 12;
+    if (modifier === "AM" && hours === 12) hours = 0;
 
-      if (showScores) {
-        filtered = data
-          .filter(d => d["Display Scores"] === "TRUE")
-          .sort((a, b) => Number(a.Score) - Number(b.Score));
-      } else {
-        filtered = data.sort((a, b) => {
-          return parseTime(a["Tee Time"]) - parseTime(b["Tee Time"]);
-        });
+    return hours * 60 + minutes;
+  }
 
-        function parseTime(timeStr) {
-          const [time, modifier] = timeStr.split(" ");
-          let [hours, minutes] = time.split(":").map(Number);
+  // Sort logic:
+  const sorted = data.sort((a, b) => {
+    const aHasScore = a["Display Scores"]?.trim().toUpperCase() === "TRUE";
+    const bHasScore = b["Display Scores"]?.trim().toUpperCase() === "TRUE";
 
-          if (modifier === "PM" && hours !== 12) hours += 12;
-          if (modifier === "AM" && hours === 12) hours = 0;
-
-          return hours * 60 + minutes;
-        }
-      }
-
-      container.innerHTML = filtered.map((team, index) => `
-        <div class="bg-white text-gray-700 p-5 rounded-sm shadow-md border border-gray-200 
-          ${showScores && index === 0 ? "border-4 border-yellow-400" : ""}">
-
-          <div class="flex justify-between items-center">
-            <h2 class="serif text-xl md:text-2xl font-bold">
-              ${team["Team Name"]}
-            </h2>
-
-            ${
-              showScores
-                ? `<span class="text-2xl font-extrabold text-green-700">
-                    ${team.Score}
-                   </span>`
-                : `<span class="text-base font-semibold text-gray-600 mt-1 sm:mt-0">
-                    ${team["Tee Time"]}
-                   </span>`
-            }
-          </div>
-
-          <div class="mt-2 text-sm md:text-base text-gray-700 border-t pt-2">
-            ${team["Player 1"]}, ${team["Player 2"]}, ${team["Player 3"]}, ${team["Player 4"]}
-          </div>
-
-          ${
-            showScores && index === 0
-              ? `<div class="mt-2 text-yellow-600 font-semibold text-sm">
-                   🏆 Leader
-                 </div>`
-              : ""
-          }
-
-        </div>
-      `).join("");
+    // Both have scores → sort by score
+    if (aHasScore && bHasScore) {
+      return Number(a.Score) - Number(b.Score);
     }
 
+    // One has score → scored team goes first
+    if (aHasScore) return -1;
+    if (bHasScore) return 1;
+
+    // Neither has score → sort by tee time
+    return parseTime(a["Tee Time"]) - parseTime(b["Tee Time"]);
+  });
+
+  container.innerHTML = sorted.map((team, index) => {
+    const hasScore = team["Display Scores"]?.trim().toUpperCase() === "TRUE";
+
+    return `
+      <div class="bg-white text-gray-700 p-5 rounded-sm shadow-md border border-gray-200 
+        ${hasScore && index === 0 ? "border-4 border-yellow-400" : ""}">
+
+        <div class="flex justify-between items-center">
+          <h2 class="serif text-xl md:text-2xl font-bold">
+            ${team["Team Name"]}
+          </h2>
+
+          ${
+            hasScore
+              ? `<span class="text-2xl font-extrabold text-green-700">
+                  ${team.Score}
+                 </span>`
+              : `<span class="text-base font-semibold text-gray-600">
+                  ${team["Tee Time"]}
+                 </span>`
+          }
+        </div>
+
+        <div class="mt-2 text-sm md:text-base text-gray-700 border-t pt-2">
+          ${team["Player 1"]}, ${team["Player 2"]}, ${team["Player 3"]}, ${team["Player 4"]}
+        </div>
+
+        ${
+          hasScore && index === 0
+            ? `<div class="mt-2 text-yellow-600 font-semibold text-sm">
+                 🏆 Champion
+               </div>`
+            : ""
+        }
+
+      </div>
+    `;
+  }).join("");
+}
+
     loadData();
-    console.log(data);
+
 
     // Auto-refresh every 30 seconds
     setInterval(loadData, 30000);
