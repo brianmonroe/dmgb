@@ -3,17 +3,18 @@
 <head>
   <meta charset="UTF-8" />
   <title>DMGB TOUR 2026 - Masters Shamble</title>
+  <link rel="icon" type="image/x-icon" href="img/favicon.png">
   <script src="https://cdn.tailwindcss.com"></script>
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
   <style>
-  .serif {
-    font-family: Georgia, "Times New Roman", serif;
-  }
+    .serif {
+      font-family: Georgia, "Times New Roman", serif;
+    }
 
-  .bottom-padding {
-    padding-bottom: 100px; /* Ensure content doesn't overlap the background image */
-  }
+    .bottom-padding {
+      padding-bottom: 50px; /* Ensure content doesn't overlap the background image */
+    }
 
    .bg-course {
     position: fixed;
@@ -49,6 +50,13 @@
     z-index: 2;
   }
 
+  @media (max-width: 768px) {
+    .mobile-margin {
+      margin-left: 15px;
+      margin-right: 15px;
+    }
+  }
+
 </style>
 
 </head>
@@ -80,7 +88,7 @@
     <div class="max-w-xl mx-auto px-4 py-2">
           <!-- TEAMS -->
         <div id="teams" class="space-y-4"></div>
-        <div id="format" class="space-y-4 bottom-padding">
+        <div id="format" class="space-y-4">
           <h2 class="serif text-2xl font-bold mt-8 mb-4 text-white underline-offset-8">
             Format</h2>
             <p class="text-white text-sm md:text-base">
@@ -101,7 +109,11 @@
     </div>
 
 
-
+    <div class="bottom-padding mobile-margin">
+      <a href="https://hotheadburritos.qu-ordering.com/933/menu" target="_blank" title="Order Hot Head Burritos!">
+        <img src="img/Hot-Head-Logo-150.png" alt="Hot Heads Burritos" class="mx-auto" style="padding: 15px 30px; background-color: #fff; border-radius: 3px; margin-top: 30px;" />
+      </a>
+    </div>
   </div>
 
   <script>
